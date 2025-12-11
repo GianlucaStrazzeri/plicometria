@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { EXERCISES, type Exercise } from "./exercisesData";
+import { EXERCISES } from "./exercisesData";
 import AddExerciseModal from "./AddExerciseModal";
 import { ExerciseType, MovementPattern } from "./types";
 import type { RichExercise } from "./types";
@@ -166,13 +166,22 @@ export default function ExercisePage() {
 									);
 								})
 								.map((c) => (
-									<button
-										key={c.id}
-										onClick={() => setSelectedClientId(c.id)}
-										className={`rounded border px-3 py-1 ${selectedClientId === c.id ? 'bg-accent text-accent-foreground' : ''}`}
-									>
-										{c.nombre}{c.apellido ? ` ${c.apellido}` : ""}
-									</button>
+										<div key={c.id} className="flex gap-2">
+											<button
+												onClick={() => setSelectedClientId(c.id)}
+												className={`rounded border px-3 py-1 ${selectedClientId === c.id ? 'bg-accent text-accent-foreground' : ''}`}
+											>
+												{c.nombre}{c.apellido ? ` ${c.apellido}` : ""}
+											</button>
+											<button
+												className="rounded border px-3 py-1"
+												onClick={() => {
+													window.location.href = `/clients/${c.id}/exercises`;
+												}}
+											>
+												Ver ejercicios
+											</button>
+										</div>
 								));
 						}, [clients, clientQuery, selectedClientId])}
 					</div>

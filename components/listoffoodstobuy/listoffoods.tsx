@@ -114,7 +114,7 @@ export default function ListOfFoods() {
 
   const openNew = () => {
     clearForm();
-    setShowForm(true);
+    setShowModal(true);
   };
 
   const openEdit = (f: Food) => {

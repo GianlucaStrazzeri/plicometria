@@ -120,7 +120,7 @@ export default function Homepage() {
 						<option value="/plicometria">Plicometría </option>
 						<option value="/calendar">Calendario</option>
 						<option value="/clients">Clientes</option>
-						<option value="/listoffoods">Lista de compras</option>
+						{/* Lista de compras removida del selector (usar tarjeta o navegación directa) */}
 						<option value="/exercise">Exercise</option>
 						<option value="/professionals">Profesionales</option>
 						<option value="/services">Servicios</option>

@@ -72,7 +72,7 @@ export function PlicometriaDashboard() {
           </div>
 
           <div className="flex w-full sm:w-auto flex-col sm:flex-row gap-2">
-            <Button className="w-full sm:w-auto" onClick={() => router.push('/calendar')}>Calendario</Button>
+            <Button className="w-full sm:w-auto" onClick={() => router.push('/listoffoods')}>Lista de alimentos</Button>
             <Button variant="outline" className="w-full sm:w-auto" onClick={() => router.push('/')}>Vistas</Button>
             <Button className="w-full sm:w-auto" onClick={() => router.push('/clients')}>Clientes</Button>
             <Button variant="outline" className="w-full sm:w-auto" onClick={handleReset}>Limpiar registros</Button>

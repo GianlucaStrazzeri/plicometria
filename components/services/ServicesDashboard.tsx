@@ -31,7 +31,26 @@ export default function ServicesDashboard() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setServices(JSON.parse(raw));
+      if (raw) {
+        setServices(JSON.parse(raw));
+      } else {
+        // seed a default standard service on first load
+        const seed = [
+          {
+            id: "svc-1",
+            name: "Servicio 1",
+            description: "Servicio estándar de ejemplo",
+            price: 50,
+            ivaPercent: 21,
+            irpfPercent: 0,
+            otherTaxesPercent: 0,
+            durationMinutes: 60,
+            notes: "Servicio creado automáticamente para demo",
+          },
+        ];
+        setServices(seed);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(seed)); } catch (e) { /* ignore */ }
+      }
     } catch (e) {
       console.warn("Failed to read services from storage", e);
     }
