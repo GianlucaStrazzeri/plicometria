@@ -1,0 +1,85 @@
+/// File: prisma/schema.prisma
+/// Description: Esquema principal de base de datos para la app de plicometría y gestión de clínica (módulo de calendario/citas).
+
+// ---------------------------------------------------------
+// GENERATORS Y DATASOURCE (Prisma 7 style)
+// ---------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // En Prisma 7 la URL de conexión NO se define aquí, sino en prisma.config.ts.
+}
+
+// ---------------------------------------------------------
+// MODELOS
+// ---------------------------------------------------------
+
+/// Modelo de cita clínica.
+/// Representa una sesión de fisioterapia (a domicilio o no) en el calendario.
+model Appointment {
+  id                String            @id @default(cuid())
+  // Título visible en el calendario (ej: "Sesión Fisio – Juan Pérez").
+  title             String
+
+  // Información del paciente.
+  patientName       String
+  patientEmail      String?
+  patientPhone      String?
+
+  // Profesional responsable de la cita (normalmente un email).
+  professionalEmail String
+
+  // Estado de la cita (pendiente, confirmada, realizada, cancelada).
+  status            AppointmentStatus @default(PENDING)
+
+  // Tipo de sesión (ej: "Primera visita", "Seguimiento", "Punción seca", etc.).
+  sessionType       String?
+
+  // Fechas y horas de inicio/fin de la cita.
+  start             DateTime
+  end               DateTime
+
+  // Información contextual.
+  location          String?           // Dirección del domicilio o consulta.
+  notes             String?           // Notas internas / observaciones clínicas.
+  diagnosis         String?           // Diagnóstico breve (opcional).
+
+  // Metadatos opcionales que encajan con tu hoja 'Citas'.
+  googleEventId     String?           // Para enlazar con Google Calendar en el futuro.
+  source            String?           // Ej: "TidyCal", "Manual", "GoogleSheets".
+
+  // Timestamps.
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+/// Enumeración de estados de cita.
+/// Estos valores se usarán en los filtros (frontend y backend).
+enum AppointmentStatus {
+  PENDING      // Pendiente de confirmar.
+  CONFIRMED    // Confirmada con el paciente.
+  COMPLETED    // Realizada.
+  CANCELLED    // Cancelada (por paciente o profesional).
+}
+
+// Modelo Patient para la página de pacientes.
+model Patient {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String
+  dni       String   @unique
+  email     String   @unique
+  phone     String?
+  birthDate DateTime?
+  sex       String?
+  pathology String?
+  notes     String?
+  status    String   @default("active")
+}
