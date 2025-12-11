@@ -63,8 +63,33 @@ export type CalendarEvent = {
 export function CalendarDashboard() {
   const [apptOpen, setApptOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [selectedProfessional, setSelectedProfessional] = useState<string>("todos");
-  const [selectedStatus, setSelectedStatus] = useState<CalendarEventStatus | "todos">("todos");
+  const FILTERS_KEY = "plicometria_calendar_filters_v1";
+
+  const [selectedProfessional, setSelectedProfessional] = useState<string>(() => {
+    try {
+      const raw = localStorage.getItem(FILTERS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed.selectedProfessional ?? "todos";
+      }
+    } catch (e) {
+      // ignore
+    }
+    return "todos";
+  });
+
+  const [selectedStatus, setSelectedStatus] = useState<CalendarEventStatus | "todos">(() => {
+    try {
+      const raw = localStorage.getItem(FILTERS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed.selectedStatus ?? "todos";
+      }
+    } catch (e) {
+      // ignore
+    }
+    return "todos";
+  });
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -77,6 +102,139 @@ export function CalendarDashboard() {
   const BILLS_STORAGE = "plicometria_bills_v1";
   const SERVICES_STORAGE = "plicometria_services_v1";
   const isEventsMounted = useRef(false);
+
+  // Seed demo data on first load: a professional, a client, a sample appointment and a demo chat
+  useEffect(() => {
+    try {
+      // professionals
+      const profKey = "plicometria_professionals_v1";
+      const rawProf = localStorage.getItem(profKey);
+      if (!rawProf) {
+        const profs = [
+          {
+            id: "prof-1",
+            nombre: "Profesional 1",
+            apellido: "",
+            email: "profesional1@example.com",
+            telefono: "",
+            especialidad: "Fisioterapia",
+            notas: "Profesional de ejemplo",
+          },
+        ];
+        localStorage.setItem(profKey, JSON.stringify(profs));
+      }
+
+      // clients
+      const clientsKey = "plicometria_clients_v1";
+      const rawClients = localStorage.getItem(clientsKey);
+      if (!rawClients) {
+        const clients = [
+          {
+            id: "client-1",
+            nombre: "Juan",
+            apellido: "Pérez",
+            email: "juan.perez@example.com",
+            telefono: "+34600000000",
+            notas: "Cliente de ejemplo",
+          },
+        ];
+        localStorage.setItem(clientsKey, JSON.stringify(clients));
+      }
+
+      // appointments
+      const rawAppts = localStorage.getItem(APPTS_STORAGE);
+      if (!rawAppts) {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, "0");
+        const d = String(today.getDate()).padStart(2, "0");
+        const fecha = `${y}-${m}-${d}`;
+        const appts = [
+          {
+            id: 1,
+            fecha,
+            horaInicio: "10:00",
+            horaFin: "11:00",
+            paciente: "Juan Pérez",
+            profesional: "Profesional 1",
+            tipo: "Cita de ejemplo",
+            estado: "pendiente",
+            nota: "Primera cita de ejemplo",
+          },
+        ];
+        localStorage.setItem(APPTS_STORAGE, JSON.stringify(appts));
+        setEvents(appts);
+        setLoading(false);
+      }
+
+      // demo chat conversation
+      const chatKey = "plicometria_chat_v1";
+      const rawChat = localStorage.getItem(chatKey);
+      if (!rawChat) {
+        const chat = [
+          { id: "sys-1", role: "system", text: "Eres un asistente que conoce la aplicación Plicometria: clientes, servicios, facturas y citas. Responde de forma concisa y útil." },
+          { id: "u-1", role: "user", text: "Hola, muéstrame la cita de ejemplo." },
+          { id: "a-1", role: "assistant", text: "Hay una cita de ejemplo hoy a las 10:00 para Juan Pérez con Profesional 1. ACTION_JSON: {\"action\":\"navigate\",\"path\":\"/calendar\"}" },
+        ];
+        localStorage.setItem(chatKey, JSON.stringify(chat));
+      }
+      
+      // services demo
+      const servicesKey = "plicometria_services_v1";
+      const rawServices = localStorage.getItem(servicesKey);
+      if (!rawServices) {
+        const services = [
+          {
+            id: "svc-1",
+            name: "Servicio 1",
+            price: 50,
+            ivaPercent: 21,
+            irpfPercent: 0,
+            otherTaxesPercent: 0,
+            durationMinutes: 60,
+            description: "Servicio de ejemplo",
+          },
+        ];
+        localStorage.setItem(servicesKey, JSON.stringify(services));
+      }
+
+      // bills demo
+      const billsKey = "plicometria_bills_v1";
+      const rawBills = localStorage.getItem(billsKey);
+      if (!rawBills) {
+        try {
+          const svcBase = 50;
+          const ivaPercent = 21;
+          const irpfPercent = 0;
+          const otrosPercent = 0;
+          const ivaAmt = (svcBase * ivaPercent) / 100;
+          const irpfAmt = (svcBase * irpfPercent) / 100;
+          const otrosAmt = (svcBase * otrosPercent) / 100;
+          const total = svcBase + ivaAmt - irpfAmt + otrosAmt;
+          const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+          const bill = {
+            id: makeId(),
+            numero: `F-${Date.now().toString(36).toUpperCase().slice(-6)}`,
+            fecha: (new Date()).toISOString().slice(0,10),
+            clientId: "client-1",
+            clientName: "Juan Pérez",
+            descripcion: "Servicio 1 - sesión de ejemplo",
+            base: svcBase,
+            ivaPercent,
+            irpfPercent,
+            otrosPercent,
+            total,
+            estado: 'pendiente',
+          };
+          localStorage.setItem(billsKey, JSON.stringify([bill]));
+        } catch (e) {
+          console.warn('Failed to seed demo bill', e);
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to seed demo data", e);
+    }
+  }, []);
 
   // Load events from localStorage, fallback to server API
   useEffect(() => {
@@ -190,7 +348,7 @@ export function CalendarDashboard() {
   }, [filteredEvents]);
 
   const calendarRef = useRef<FullCalendar | null>(null);
-  const [currentView, setCurrentView] = useState<'dayGridMonth' | 'timeGridWeek' | 'timeGridDay'>('timeGridWeek');
+  const [currentView, setCurrentView] = useState<'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'timeGridThreeDay'>('timeGridWeek');
 
   useEffect(() => {
     setMounted(true);
@@ -201,6 +359,16 @@ export function CalendarDashboard() {
     setSelectedStatus("todos");
     setSearch("");
   };
+
+  // Persist filters so selects keep their value on mobile / after reload
+  useEffect(() => {
+    try {
+      const payload = { selectedProfessional, selectedStatus };
+      localStorage.setItem(FILTERS_KEY, JSON.stringify(payload));
+    } catch (e) {
+      // ignore
+    }
+  }, [selectedProfessional, selectedStatus]);
 
   if (!mounted) {
     // Avoid rendering browser-only widgets during SSR/hydration mismatch
@@ -380,6 +548,16 @@ export function CalendarDashboard() {
                 >
                   Semana
                 </Button>
+
+                <Button
+                  variant={currentView === 'timeGridThreeDay' ? 'default' : 'outline'}
+                  onClick={() => {
+                    setCurrentView('timeGridThreeDay');
+                    calendarRef.current?.getApi().changeView('timeGridThreeDay');
+                  }}
+                >
+                  3 días
+                </Button>
                 <Button
                   variant={currentView === 'dayGridMonth' ? 'default' : 'outline'}
                   onClick={() => {
@@ -401,6 +579,9 @@ export function CalendarDashboard() {
                   ref={calendarRef}
                   plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                   initialView={currentView}
+                  views={{
+                    timeGridThreeDay: { type: 'timeGrid', duration: { days: 3 }, buttonText: '3 días' },
+                  }}
                   headerToolbar={false}
                   events={fcEvents}
                   height={600}

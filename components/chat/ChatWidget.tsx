@@ -17,11 +17,36 @@ export default function ChatWidget({ initialMessage, autoSend }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    // initial system prompt that gives the assistant context about the app
+    // Try to load saved conversation from localStorage (development/demo)
+    try {
+      const raw = localStorage.getItem("plicometria_chat_v1");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Message[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to read demo chat from storage', e);
+    }
+
+    // Fallback initial system prompt that gives the assistant context about the app
     setMessages([
       { id: "sys-1", role: "system", text: "Eres un asistente que conoce la aplicación Plicometria: clientes, servicios, facturas y citas. Responde de forma concisa y útil." },
     ]);
   }, []);
+
+  // persist messages to localStorage so a demo conversation remains across reloads
+  useEffect(() => {
+    try {
+      if (messages.length > 0) {
+        localStorage.setItem("plicometria_chat_v1", JSON.stringify(messages));
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [messages]);
 
   // if an initial message is provided and autoSend is true, prefill and send
   useEffect(() => {
