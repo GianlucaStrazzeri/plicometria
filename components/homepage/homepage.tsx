@@ -104,8 +104,8 @@ export default function Homepage() {
 						</div>
 				</div>
 
-				{/* Accessible select kept for keyboard users */}
-				<div className="sr-only sm:not-sr-only">
+				{/* Select visible on all sizes (mobile + desktop) */}
+				<div className="block">
 					<label className="block text-sm font-medium text-muted-foreground">Ir a</label>
 					<select
 						value={choice}

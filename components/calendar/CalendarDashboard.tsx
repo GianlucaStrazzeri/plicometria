@@ -149,7 +149,7 @@ export function CalendarDashboard() {
         const m = String(today.getMonth() + 1).padStart(2, "0");
         const d = String(today.getDate()).padStart(2, "0");
         const fecha = `${y}-${m}-${d}`;
-        const appts = [
+        const appts: CalendarEvent[] = [
           {
             id: 1,
             fecha,
