@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import HoursOfWork from "@/components/professional/Hoursofwork/HoursOfWork";
+import ServicesSelectModal from "@/components/professional/servicesOfEveryprofessional/ServicesSelectModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,16 +43,54 @@ export default function AddProfessional({ open, onClose, initial = null, onSave,
     setNotas(initial?.notas ?? "");
   }, [open, initial]);
 
-  if (!open) return null;
-
   const isEditing = Boolean(initial && (initial as any).id);
+
+  const [activeTab, setActiveTab] = useState<"info" | "horarios" | "servicios">("info");
+  const [hoursOpen, setHoursOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <div className="relative z-10 w-full max-w-md rounded bg-white p-6 shadow-lg">
-        <h3 className="text-lg font-semibold">{isEditing ? "Editar profesional" : "Nuevo profesional"}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">{isEditing ? "Editar profesional" : "Nuevo profesional"}</h3>
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className={`px-2 py-1 rounded ${activeTab === "info" ? "bg-gray-100" : ""}`}
+              onClick={() => setActiveTab("info")}
+            >
+              Info
+            </button>
+            <button
+              type="button"
+              className={`px-2 py-1 rounded ${activeTab === "horarios" ? "bg-gray-100" : ""}`}
+              onClick={() => {
+                setActiveTab("horarios");
+                if (!isEditing) return alert("Guarda el profesional antes de configurar horarios.");
+                setHoursOpen(true);
+              }}
+            >
+              Horarios
+            </button>
+            <button
+              type="button"
+              className={`px-2 py-1 rounded ${activeTab === "servicios" ? "bg-gray-100" : ""}`}
+              onClick={() => {
+                setActiveTab("servicios");
+                if (!isEditing) return alert("Guarda el profesional antes de asignar servicios.");
+                setServicesOpen(true);
+              }}
+            >
+              Servicios
+            </button>
+          </div>
+        </div>
 
         <div className="mt-4 grid gap-3">
           <div>
@@ -124,6 +164,17 @@ export default function AddProfessional({ open, onClose, initial = null, onSave,
               {isEditing ? "Guardar" : "Crear"}
             </Button>
           </div>
+          {/** Modals para horarios y servicios */}
+          <HoursOfWork open={hoursOpen} onClose={() => setHoursOpen(false)} professionalId={(initial as any)?.id ?? null} />
+          <ServicesSelectModal
+            open={servicesOpen}
+            onClose={() => setServicesOpen(false)}
+            professionalId={(initial as any)?.id ?? null}
+            onChange={(ids) => {
+              // opcional: manejar cambios (por ejemplo refrescar UI)
+              console.debug("Servicios asignados:", ids);
+            }}
+          />
         </div>
       </div>
     </div>
