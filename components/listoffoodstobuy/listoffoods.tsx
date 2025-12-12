@@ -19,6 +19,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,12 +72,49 @@ export default function ListOfFoods() {
   const [tags, setTags] = useState("");
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setFoods(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read foods from storage", e);
-    }
+    let mounted = true;
+    (async () => {
+      // If Supabase client is configured, try to load from remote
+      try {
+        if (supabase) {
+          const { data, error } = await supabase.from("foods").select("*").order("name", { ascending: true });
+          if (error) {
+            // Fall back to localStorage if remote fails
+            throw error;
+          }
+          if (!mounted) return;
+          if (data && Array.isArray(data) && data.length > 0) {
+            // Ensure tags is array
+            const normalized = data.map((d: any) => ({
+              id: String(d.id ?? makeId()),
+              name: d.name ?? "",
+              duration: d.duration ?? "",
+              proteins: d.proteins ?? null,
+              fats: d.fats ?? null,
+              carbs: d.carbs ?? null,
+              sugars: d.sugars ?? null,
+              vitamins: d.vitamins ?? "",
+              caloriesPer100: d.caloriesPer100 ?? d.calories_per_100 ?? null,
+              tags: d.tags ?? d.tags_list ?? [],
+            }));
+            setFoods(normalized);
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized)); } catch {}
+            return;
+          }
+        }
+      } catch (err) {
+        // ignore and try localStorage
+      }
+
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) setFoods(JSON.parse(raw));
+      } catch (e) {
+        console.warn("Failed to read foods from storage", e);
+      }
+    })();
+
+    return () => { mounted = false };
   }, []);
 
   useEffect(() => {
@@ -136,7 +174,7 @@ export default function ListOfFoods() {
     return Number.isFinite(n) ? n : null;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name.trim()) return alert("El nombre es obligatorio");
     const payload: Food = {
       id: editing ? editing.id : makeId(),
@@ -153,7 +191,66 @@ export default function ListOfFoods() {
         .map((t) => t.trim())
         .filter(Boolean),
     };
+    // Try to persist to Supabase first, fallback to localStorage
+    try {
+      if (supabase) {
+        if (editing) {
+          const { error } = await supabase.from("foods").update({
+            name: payload.name,
+            duration: payload.duration,
+            proteins: payload.proteins,
+            fats: payload.fats,
+            carbs: payload.carbs,
+            sugars: payload.sugars,
+            vitamins: payload.vitamins,
+            caloriesPer100: payload.caloriesPer100,
+            tags: payload.tags,
+          }).eq("id", payload.id);
+          if (error) throw error;
+          setFoods((prev) => prev.map((p) => (p.id === payload.id ? payload : p)));
+        } else {
+          const insertObj: any = {
+            name: payload.name,
+            duration: payload.duration,
+            proteins: payload.proteins,
+            fats: payload.fats,
+            carbs: payload.carbs,
+            sugars: payload.sugars,
+            vitamins: payload.vitamins,
+            caloriesPer100: payload.caloriesPer100,
+            tags: payload.tags,
+          };
+          const { data, error } = await supabase.from("foods").insert([insertObj]).select();
+          if (error) throw error;
+          const returned = Array.isArray(data) && data[0] ? data[0] : null;
+          if (returned) {
+            const saved: Food = {
+              id: String(returned.id),
+              name: returned.name,
+              duration: returned.duration,
+              proteins: returned.proteins,
+              fats: returned.fats,
+              carbs: returned.carbs,
+              sugars: returned.sugars,
+              vitamins: returned.vitamins,
+              caloriesPer100: returned.caloriesPer100 ?? returned.calories_per_100 ?? null,
+              tags: returned.tags ?? [],
+            };
+            setFoods((prev) => [saved, ...prev]);
+          } else {
+            setFoods((prev) => [payload, ...prev]);
+          }
+        }
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(foods)); } catch {}
+        setShowForm(false);
+        clearForm();
+        return;
+      }
+    } catch (err) {
+      console.warn("Supabase write failed, falling back to local storage", err);
+    }
 
+    // Fallback: persist locally
     if (editing) {
       setFoods((prev) => prev.map((p) => (p.id === editing.id ? payload : p)));
     } else {
@@ -166,7 +263,20 @@ export default function ListOfFoods() {
 
   const handleDelete = (id: string) => {
     if (!confirm("¿Eliminar alimento?")) return;
-    setFoods((prev) => prev.filter((p) => p.id !== id));
+    (async () => {
+      try {
+        if (supabase) {
+          const { error } = await supabase.from("foods").delete().eq("id", id);
+          if (error) throw error;
+          setFoods((prev) => prev.filter((p) => p.id !== id));
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(foods)); } catch {}
+          return;
+        }
+      } catch (err) {
+        console.warn("Supabase delete failed, falling back to local", err);
+      }
+      setFoods((prev) => prev.filter((p) => p.id !== id));
+    })();
   };
 
   return (
