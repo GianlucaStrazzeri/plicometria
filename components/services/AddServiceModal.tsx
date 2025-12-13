@@ -134,7 +134,7 @@ export default function AddServiceModal({ open, onClose, initial = null, onSave,
 
           <div>
             <Label htmlFor="svc-notes">Notas</Label>
-            <input id="svc-notes" className="w-full rounded border px-2 py-1" value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <Input id="svc-notes" className="w-full" value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
 
           <div className="rounded border p-3 text-sm bg-gray-50">
