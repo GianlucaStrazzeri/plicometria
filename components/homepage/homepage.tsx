@@ -19,7 +19,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ChatWidget from "@/components/chat/ChatWidget";
-import LeadForm from "@/components/marketing/lead/LeadForm";
+import LeadForm from "@/components/marketing/leadsform/LeadForm";
+import LeadsListModal from "@/components/marketing/leadsform/LeadsListModal";
 // Button removed: navigation happens immediately on select change
 
 export default function Homepage() {
@@ -28,6 +29,7 @@ export default function Homepage() {
 	const [counts, setCounts] = useState({ clients: 0, services: 0, bills: 0, appointments: 0 });
 	const [chatOpen, setChatOpen] = useState(false);
 	const [leadOpen, setLeadOpen] = useState(false);
+	const [leadsOpen, setLeadsOpen] = useState(false);
 	const [leadSource, setLeadSource] = useState<string | null>(null);
 
 	useEffect(() => {

@@ -38,3 +38,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Could not save lead" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const dir = path.join(process.cwd(), "data");
+    const file = path.join(dir, "leads.json");
+
+    if (!fs.existsSync(file)) {
+      return NextResponse.json({ ok: true, leads: [] });
+    }
+
+    const raw = fs.readFileSync(file, "utf8");
+    const leads = JSON.parse(raw || "[]");
+
+    return NextResponse.json({ ok: true, leads }, { status: 200 });
+  } catch (err) {
+    console.error("Error reading leads:", err);
+    return NextResponse.json({ ok: false, error: "Could not read leads" }, { status: 500 });
+  }
+}
