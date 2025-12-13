@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
   message?: string;
@@ -8,15 +8,20 @@ type Props = {
   localStorageKey?: string;
 };
 
-export default function ConsentPopup({
-  message,
-  onChange,
-  localStorageKey = "marketing_consent",
-}: Props) {
+export default function ConsentPopup(props: Props): React.ReactElement | null {
+  const { message, onChange, localStorageKey = "marketing_consent" } = props;
   const [visible, setVisible] = useState(false);
   const [consent, setConsent] = useState<boolean | null>(null);
 
+  // Evitar render en servidor para prevenir warnings de hidratación
+  const [mounted, setMounted] = useState(false);
+
+  // ref para el botón aceptar para foco automático
+  const acceptRef = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
+    setMounted(true);
+
     if (typeof window === "undefined") return;
     try {
       const saved = localStorage.getItem(localStorageKey);
@@ -31,9 +36,25 @@ export default function ConsentPopup({
     }
   }, [localStorageKey]);
 
+  // focus when opened and Escape handler to close
+  useEffect(() => {
+    if (!mounted || !visible) return;
+
+    // focus accept button for keyboard users
+    acceptRef.current?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setVisible(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mounted, visible]);
+
   const accept = () => {
     try {
-      localStorage.setItem(localStorageKey, "true");
+      if (typeof window !== "undefined") localStorage.setItem(localStorageKey, "true");
     } catch (e) {}
     setConsent(true);
     setVisible(false);
@@ -42,20 +63,24 @@ export default function ConsentPopup({
 
   const decline = () => {
     try {
-      localStorage.setItem(localStorageKey, "false");
+      if (typeof window !== "undefined") localStorage.setItem(localStorageKey, "false");
     } catch (e) {}
     setConsent(false);
     setVisible(false);
     onChange?.(false);
   };
 
+  // No renderizar hasta que estemos montados en cliente
+  if (!mounted) return null;
   if (!visible) return null;
 
   return (
     <div
       role="dialog"
+      aria-modal="true"
       aria-live="polite"
       aria-label="Consentimiento de marketing"
+      tabIndex={-1}
       style={{ position: "fixed", right: 20, bottom: 20, zIndex: 1000, maxWidth: 380 }}
     >
       <div
@@ -88,6 +113,7 @@ export default function ConsentPopup({
             Rechazar
           </button>
           <button
+            ref={acceptRef}
             onClick={accept}
             style={{
               background: "#0070f3",
