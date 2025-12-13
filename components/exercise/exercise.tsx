@@ -126,7 +126,7 @@ export default function ExercisePage() {
 				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
 					<h1 className="text-2xl font-semibold">Programador de ejercicios</h1>
 					<div className="flex w-full sm:w-auto flex-col sm:flex-row gap-2">
-						<Button variant="outline" className="w-full sm:w-auto" onClick={() => router.push('/')}>Vistas</Button>
+						<Button variant="outline" className="w-full sm:w-auto" onClick={() => window.dispatchEvent(new Event('open-homepage'))}>Vistas</Button>
 						<Button className="w-full sm:w-auto" onClick={() => setAddOpen(true)}>Añadir ejercicio</Button>
 						<Button variant="outline" className="w-full sm:w-auto" onClick={() => setListOpen(true)}>Listado de ejercicios</Button>
 					</div>
@@ -245,6 +245,8 @@ export default function ExercisePage() {
 					<h2 className="font-medium">Asignar ejercicio</h2>
 					<div className="mt-3 grid gap-2 md:grid-cols-3">
 						<select
+							aria-label="Seleccionar ejercicio"
+							title="Seleccionar ejercicio"
 							className="md:col-span-2 rounded border px-3 py-2"
 							value={exerciseLabel}
 							onChange={(e) => setExerciseLabel(e.target.value)}

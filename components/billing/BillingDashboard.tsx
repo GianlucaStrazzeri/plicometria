@@ -152,10 +152,10 @@ export default function BillingDashboard() {
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2">
-          <Button className="w-full sm:w-auto" onClick={() => router.push('/')}>Vista</Button>
+          <Button className="w-full sm:w-auto" onClick={() => window.dispatchEvent(new Event('open-homepage'))}>Vista</Button>
           <Button className="w-full sm:w-auto" onClick={() => { setEditing(null); setOpenModal(true); }}>Nueva factura</Button>
           <Button className="w-full sm:w-auto" variant="outline" onClick={() => document.getElementById("bills-import")?.click()}>Importar</Button>
-          <input id="bills-import" type="file" accept="application/json" className="hidden" onChange={handleImportFile} />
+          <input id="bills-import" type="file" accept="application/json" className="hidden" onChange={handleImportFile} aria-label="Importar facturas" title="Importar facturas" />
           <Button className="w-full sm:w-auto" variant="outline" onClick={handleExport}>Exportar</Button>
         </div>
       </div>

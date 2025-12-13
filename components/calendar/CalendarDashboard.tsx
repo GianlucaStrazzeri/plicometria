@@ -410,7 +410,7 @@ export function CalendarDashboard() {
               Nueva cita
             </Button>
 
-            <Button variant="outline" onClick={() => router.push('/')} className="w-full md:w-auto mt-2 md:mt-0">
+            <Button variant="outline" onClick={() => window.dispatchEvent(new Event('open-homepage'))} className="w-full md:w-auto mt-2 md:mt-0">
               Vistas
             </Button>
 

@@ -154,7 +154,7 @@ export default function ClientsTable() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => router.push('/') }>
+          <Button variant="outline" onClick={() => window.dispatchEvent(new Event('open-homepage'))}>
             Vistas
           </Button>
 
@@ -174,7 +174,7 @@ export default function ClientsTable() {
           >
             Nuevo cliente
           </Button>
-          <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportFile} />
+          <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportFile} aria-label="Importar clientes" title="Importar clientes" />
         </div>
       </div>
 
