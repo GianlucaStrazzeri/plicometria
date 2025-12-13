@@ -94,11 +94,19 @@ export function CalendarDashboard() {
   const [showFilters, setShowFilters] = useState(false);
 
   // Cargamos eventos desde la API de appointments (server-side)
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const APPTS_STORAGE = "plicometria_appointments_v1";
+  const [events, setEvents] = useState<CalendarEvent[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(APPTS_STORAGE) : null;
+      if (raw) return JSON.parse(raw) as CalendarEvent[];
+    } catch (e) {
+      // ignore
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(events.length === 0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const APPTS_STORAGE = "plicometria_appointments_v1";
   const BILLS_STORAGE = "plicometria_bills_v1";
   const SERVICES_STORAGE = "plicometria_services_v1";
   const isEventsMounted = useRef(false);
@@ -163,8 +171,7 @@ export function CalendarDashboard() {
           },
         ];
         localStorage.setItem(APPTS_STORAGE, JSON.stringify(appts));
-        setEvents(appts);
-        setLoading(false);
+        // events state is initialized from localStorage; no immediate setState here
       }
 
       // demo chat conversation
@@ -240,13 +247,19 @@ export function CalendarDashboard() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
+    let t: number | undefined;
     try {
       const raw = localStorage.getItem(APPTS_STORAGE);
       if (raw) {
         const parsed = JSON.parse(raw) as CalendarEvent[];
-        if (mounted) setEvents(parsed);
-        setLoading(false);
-        return;
+        t = window.setTimeout(() => {
+          if (mounted) setEvents(parsed);
+          if (mounted) setLoading(false);
+        }, 0);
+        return () => {
+          mounted = false;
+          if (t) clearTimeout(t);
+        };
       }
     } catch (e) {
       console.warn('Failed to read appointments from storage', e);
@@ -290,7 +303,7 @@ export function CalendarDashboard() {
         if (mounted) setLoading(false);
       });
 
-    return () => { mounted = false; };
+    return () => { mounted = false; if (t) clearTimeout(t); };
   }, []);
 
   // persist events to localStorage when they change (skip initial load)
@@ -412,11 +425,9 @@ export function CalendarDashboard() {
         </header>
 
         {/* New appointment modal */}
-        {typeof window !== "undefined" ? (
-          // Lazy import to avoid SSR issues — import component dynamically via client
-          // but we can render it directly since this is a client component file.
+        {/* New appointment modal (render only after mounted to avoid server/client branching) */}
+        {mounted && (
           <React.Suspense fallback={null}>
-            {/* Import locally */}
             <NewAppointmentModal
               open={apptOpen}
               onClose={() => setApptOpen(false)}
@@ -467,7 +478,7 @@ export function CalendarDashboard() {
               }}
             />
           </React.Suspense>
-        ) : null}
+        )}
 
         <Separator />
 

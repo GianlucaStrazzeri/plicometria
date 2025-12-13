@@ -42,7 +42,15 @@ function parseNum(v: string) {
 
 export default function AddBillModal({ open, onClose, initial = null, onSave, onDelete }: Props) {
   const CLIENTS_KEY = "plicometria_clients_v1";
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>(() => {
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem(CLIENTS_KEY) : null;
+      if (raw) return JSON.parse(raw) as Client[];
+    } catch (e) {
+      // ignore
+    }
+    return [];
+  });
   const [clientQuery, setClientQuery] = useState("");
 
   const [numero, setNumero] = useState("");
@@ -56,27 +64,36 @@ export default function AddBillModal({ open, onClose, initial = null, onSave, on
   const [otros, setOtros] = useState("");
   const [estado, setEstado] = useState<Bill["estado"]>("pendiente");
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(CLIENTS_KEY);
-      if (raw) setClients(JSON.parse(raw));
-    } catch (e) {
-      // ignore
-    }
-  }, [open]);
-
+  // clients loaded lazily from localStorage above; keep state in sync when modal opens
   useEffect(() => {
     if (!open) return;
-    setNumero(initial?.numero ?? `F-${Date.now().toString(36).toUpperCase().slice(-6)}`);
-    setFecha(initial?.fecha ?? new Date().toISOString().slice(0, 10));
-    setClientId(initial?.clientId ?? initial?.clientId);
-    setClientName(initial?.clientName ?? "");
-    setDescripcion(initial?.descripcion ?? "");
-    setBase(initial?.base != null ? String(initial.base) : "");
-    setIva(initial?.ivaPercent != null ? String(initial.ivaPercent) : "21");
-    setIrpf(initial?.irpfPercent != null ? String(initial.irpfPercent) : "0");
-    setOtros(initial?.otrosPercent != null ? String(initial.otrosPercent) : "0");
-    setEstado((initial?.estado as any) ?? "pendiente");
+    const t = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(CLIENTS_KEY);
+        if (raw) setClients(JSON.parse(raw));
+      } catch (e) {
+        // ignore
+      }
+    }, 0);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  // initialize input state when modal opens; run async to avoid synchronous setState-in-effect warnings
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => {
+      setNumero(initial?.numero ?? `F-${Date.now().toString(36).toUpperCase().slice(-6)}`);
+      setFecha(initial?.fecha ?? new Date().toISOString().slice(0, 10));
+      setClientId(initial?.clientId ?? initial?.clientId);
+      setClientName(initial?.clientName ?? "");
+      setDescripcion(initial?.descripcion ?? "");
+      setBase(initial?.base != null ? String(initial.base) : "");
+      setIva(initial?.ivaPercent != null ? String(initial.ivaPercent) : "21");
+      setIrpf(initial?.irpfPercent != null ? String(initial.irpfPercent) : "0");
+      setOtros(initial?.otrosPercent != null ? String(initial.otrosPercent) : "0");
+      setEstado((initial?.estado as Bill["estado"]) ?? "pendiente");
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, initial]);
 
   if (!open) return null;

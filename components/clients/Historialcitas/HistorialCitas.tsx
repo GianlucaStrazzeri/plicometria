@@ -32,23 +32,15 @@ type Props = {
 const STORAGE_KEY = "plicometria_appointments_v1";
 
 export default function HistorialCitas({ open, onClose, clientId }: Props) {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-
-  useEffect(() => {
-    if (!open) return;
+  const [appointments, setAppointments] = useState<Appointment[]>(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        setAppointments([]);
-        return;
-      }
-      const parsed = JSON.parse(raw) as Appointment[];
-      setAppointments(parsed);
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (!raw) return [];
+      return JSON.parse(raw) as Appointment[];
     } catch (e) {
-      console.warn("Failed to read appointments", e);
-      setAppointments([]);
+      return [];
     }
-  }, [open]);
+  });
 
   const now = useMemo(() => new Date(), []);
 

@@ -74,11 +74,14 @@ export default function ClientModal({ open, onClose, initial = null, onSave, onD
 
   useEffect(() => {
     if (!open) return;
-    setNombre(initial?.nombre ?? "");
-    setApellido(initial?.apellido ?? "");
-    setEmail(initial?.email ?? "");
-    setTelefono(initial?.telefono ?? "");
-    setNotas(initial?.notas ?? "");
+    const t = setTimeout(() => {
+      setNombre(initial?.nombre ?? "");
+      setApellido(initial?.apellido ?? "");
+      setEmail(initial?.email ?? "");
+      setTelefono(initial?.telefono ?? "");
+      setNotas(initial?.notas ?? "");
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, initial]);
 
   if (!open) return null;

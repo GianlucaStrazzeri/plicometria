@@ -58,18 +58,19 @@ export function PlicometriaForm({ onSubmitRegistro }: Props) {
   const [openComposicion, setOpenComposicion] = useState(false);
 
   // Clientes cargados desde localStorage para búsqueda/selección
-  const [clients, setClients] = useState<Client[]>([]);
-  const [clientQuery, setClientQuery] = useState("");
   const STORAGE_KEY = "plicometria_clients_v1";
-
-  useEffect(() => {
+  const [clients, setClients] = useState<Client[]>(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setClients(JSON.parse(raw));
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (raw) return JSON.parse(raw) as Client[];
     } catch (e) {
       // ignore
     }
-  }, []);
+    return [];
+  });
+  const [clientQuery, setClientQuery] = useState("");
+
+  // clients are initialized lazily above; keep in sync if needed later
 
   const filteredClients = useMemo(() => {
     const q = clientQuery.trim().toLowerCase();

@@ -42,14 +42,17 @@ export default function AddServiceModal({ open, onClose, initial = null, onSave,
 
   useEffect(() => {
     if (!open) return;
-    setName(initial?.name ?? "");
-    setDescription(initial?.description ?? "");
-    setPrice(initial?.price != null ? String(initial.price) : "");
-    setIva(initial?.ivaPercent != null ? String(initial.ivaPercent) : "");
-    setIrpf(initial?.irpfPercent != null ? String(initial.irpfPercent) : "");
-    setOther(initial?.otherTaxesPercent != null ? String(initial.otherTaxesPercent) : "");
-    setDuration(initial?.durationMinutes != null ? String(initial.durationMinutes) : "");
-    setNotes(initial?.notes ?? "");
+    const t = setTimeout(() => {
+      setName(initial?.name ?? "");
+      setDescription(initial?.description ?? "");
+      setPrice(initial?.price != null ? String(initial.price) : "");
+      setIva(initial?.ivaPercent != null ? String(initial.ivaPercent) : "");
+      setIrpf(initial?.irpfPercent != null ? String(initial.irpfPercent) : "");
+      setOther(initial?.otherTaxesPercent != null ? String(initial.otherTaxesPercent) : "");
+      setDuration(initial?.durationMinutes != null ? String(initial.durationMinutes) : "");
+      setNotes(initial?.notes ?? "");
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, initial]);
 
   if (!open) return null;

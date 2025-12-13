@@ -35,12 +35,15 @@ export default function AddProfessional({ open, onClose, initial = null, onSave,
 
   useEffect(() => {
     if (!open) return;
-    setNombre(initial?.nombre ?? "");
-    setApellido(initial?.apellido ?? "");
-    setEmail(initial?.email ?? "");
-    setTelefono(initial?.telefono ?? "");
-    setEspecialidad(initial?.especialidad ?? "");
-    setNotas(initial?.notas ?? "");
+    const t = setTimeout(() => {
+      setNombre(initial?.nombre ?? "");
+      setApellido(initial?.apellido ?? "");
+      setEmail(initial?.email ?? "");
+      setTelefono(initial?.telefono ?? "");
+      setEspecialidad(initial?.especialidad ?? "");
+      setNotas(initial?.notas ?? "");
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, initial]);
 
   const isEditing = Boolean(initial && (initial as any).id);

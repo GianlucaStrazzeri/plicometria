@@ -28,8 +28,20 @@ const CLIENTS_KEY = "plicometria_clients_v1";
 const ASSIGNMENTS_KEY = "cr_assignments_v1";
 
 export default function ExercisePage() {
-	const [clients, setClients] = useState<Client[]>([]);
-	const [assignments, setAssignments] = useState<Assignment[]>([]);
+	const [clients, setClients] = useState<Client[]>(() => {
+		try {
+			const raw = typeof window !== 'undefined' ? window.localStorage.getItem(CLIENTS_KEY) : null;
+			if (raw) return JSON.parse(raw) as Client[];
+		} catch {}
+		return [];
+	});
+	const [assignments, setAssignments] = useState<Assignment[]>(() => {
+		try {
+			const raw = typeof window !== 'undefined' ? window.localStorage.getItem(ASSIGNMENTS_KEY) : null;
+			if (raw) return JSON.parse(raw) as Assignment[];
+		} catch {}
+		return [];
+	});
 
 	const [newClientName, setNewClientName] = useState("");
 	const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
@@ -60,16 +72,7 @@ export default function ExercisePage() {
 
 	const router = useRouter();
 
-	useEffect(() => {
-			try {
-				const raw = window.localStorage.getItem(CLIENTS_KEY);
-				if (raw) setClients(JSON.parse(raw));
-			} catch {}
-		try {
-			const raw = window.localStorage.getItem(ASSIGNMENTS_KEY);
-			if (raw) setAssignments(JSON.parse(raw));
-		} catch {}
-	}, []);
+	// clients and assignments are initialized from localStorage in the useState lazy initializers above
 
 	// Avoid writing empty clients to storage on first mount and overwrite
 	const isClientsMounted = useRef(false);

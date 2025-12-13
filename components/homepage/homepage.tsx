@@ -88,6 +88,13 @@ export default function Homepage() {
 					</button>
 
 					{/* Card: Chat (opens modal) */}
+					{/* Card: Documentation */}
+					<button onClick={() => router.push('/docs')} className="flex flex-col items-start p-3 rounded border hover:shadow-sm text-left">
+						<div className="text-2xl">📚</div>
+						<div className="mt-2 text-sm font-medium">Documentación</div>
+						<div className="text-xs text-muted-foreground">Guía del proyecto y SQL</div>
+					</button>
+
 						<div className="flex flex-col gap-2">
 							<button onClick={() => setChatOpen(true)} className="flex items-center gap-3 p-3 rounded border hover:shadow-sm text-left">
 								<div className="text-2xl">💬</div>

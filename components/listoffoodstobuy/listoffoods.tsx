@@ -32,6 +32,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import FoodModal from "./FoodModal";
+import MarketList from "./MarketList";
 
 type Food = {
   id: string;
@@ -59,6 +60,7 @@ export default function ListOfFoods() {
   const [editing, setEditing] = useState<Food | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showMarket, setShowMarket] = useState(false);
 
   // form fields
   const [name, setName] = useState("");
@@ -279,6 +281,20 @@ export default function ListOfFoods() {
     })();
   };
 
+  const addToMarket = (f: Food) => {
+    try {
+      const raw = localStorage.getItem("market_list_v1");
+      const list: any[] = raw ? JSON.parse(raw) : [];
+      const item = { id: makeId(), text: f.name, qty: undefined, bought: false };
+      list.unshift(item);
+      localStorage.setItem("market_list_v1", JSON.stringify(list));
+      setShowMarket(true);
+    } catch (e) {
+      console.warn("Failed to add to market list", e);
+      alert("No se pudo añadir a la lista de compras");
+    }
+  };
+
   return (
     <div className="space-y-4 mx-auto w-full max-w-md p-4 sm:max-w-5xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -296,6 +312,7 @@ export default function ListOfFoods() {
           <div className="flex flex-col sm:flex-row gap-2">
             <Button className="w-full sm:w-auto" onClick={openNew}>Agregar</Button>
             <Button className="w-full sm:w-auto" variant="outline" onClick={() => setShowModal(true)}>Administrar (modal)</Button>
+            <Button className="w-full sm:w-auto" variant="secondary" onClick={() => setShowMarket(true)}>Lista de compras</Button>
             <Button className="w-full sm:w-auto" variant="ghost" onClick={() => router.push('/')}>Vistas</Button>
           </div>
         </div>
@@ -387,6 +404,9 @@ export default function ListOfFoods() {
               <TableCell>{f.vitamins || "—"}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => addToMarket(f)}>
+                    Añadir a lista
+                  </Button>
                   <Button variant="ghost" size="sm" onClick={() => openEdit(f)}>
                     Editar
                   </Button>
@@ -409,6 +429,7 @@ export default function ListOfFoods() {
       </Table>
       
       <FoodModal open={showModal} onClose={() => setShowModal(false)} foods={foods} onChange={(f) => setFoods(f)} />
+      <MarketList open={showMarket} onClose={() => setShowMarket(false)} />
     </div>
   );
 }

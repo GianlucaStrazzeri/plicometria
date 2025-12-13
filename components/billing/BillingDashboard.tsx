@@ -21,21 +21,22 @@ function makeId() {
 }
 
 export default function BillingDashboard() {
-  const [bills, setBills] = useState<Bill[]>([]);
+  const [bills, setBills] = useState<Bill[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (raw) return JSON.parse(raw) as Bill[];
+    } catch (e) {
+      // ignore
+    }
+    return [];
+  });
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState<Bill | null>(null);
   const isMountedRef = useRef(false);
   const router = useRouter();
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setBills(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read bills from storage", e);
-    }
-  }, []);
+  // bills are initialized from localStorage via the useState lazy initializer above
 
   useEffect(() => {
     if (!isMountedRef.current) {
@@ -138,7 +139,7 @@ export default function BillingDashboard() {
   }
 
   return (
-    <div className="space-y-4 mx-auto w-full max-w-md p-4 sm:max-w-5xl">
+    <div className="space-y-6 mx-auto w-full max-w-md p-4 sm:max-w-5xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="w-full max-w-lg">
           <Input
@@ -159,6 +160,7 @@ export default function BillingDashboard() {
         </div>
       </div>
 
+      <div className="w-full overflow-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -196,6 +198,7 @@ export default function BillingDashboard() {
           )}
         </TableBody>
       </Table>
+      </div>
 
       <AddBillModal
         open={openModal}

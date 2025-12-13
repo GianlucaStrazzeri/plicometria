@@ -32,7 +32,15 @@ const STORAGE_KEY = "plicometria_clients_v1";
 
 export default function ClientsTable() {
   const router = useRouter();
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (raw) return JSON.parse(raw) as Client[];
+    } catch (e) {
+      // ignore
+    }
+    return [];
+  });
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState<Client | null>(null);
@@ -41,14 +49,7 @@ export default function ClientsTable() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isMountedRef = useRef(false);
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setClients(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read clients from storage", e);
-    }
-  }, []);
+  // clients are initialized from localStorage via useState lazy initializer
 
   useEffect(() => {
     // Avoid writing to storage on first mount — first effect loads existing data.

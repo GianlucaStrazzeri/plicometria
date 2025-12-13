@@ -26,23 +26,21 @@ function makeId() {
 }
 
 export default function HoursOfWork({ open, onClose, professionalId }: Props) {
-	const [entries, setEntries] = useState<HourEntry[]>([]);
+	const [entries, setEntries] = useState<HourEntry[]>(() => {
+		try {
+			const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+			if (!raw) return [];
+			return JSON.parse(raw) as HourEntry[];
+		} catch (e) {
+			return [];
+		}
+	});
 	const [day, setDay] = useState("monday");
 	const [start, setStart] = useState("09:00");
 	const [end, setEnd] = useState("17:00");
 	const [notes, setNotes] = useState("");
 
-	useEffect(() => {
-		try {
-			const raw = localStorage.getItem(STORAGE_KEY);
-			if (!raw) return setEntries([]);
-			const parsed = JSON.parse(raw) as HourEntry[];
-			setEntries(parsed);
-		} catch (e) {
-			console.warn("Failed to read hours", e);
-			setEntries([]);
-		}
-	}, [open]);
+	// entries initialized from localStorage via useState lazy initializer above
 
 	const saveToStorage = (next: HourEntry[]) => {
 		try {

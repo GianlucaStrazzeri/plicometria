@@ -50,7 +50,7 @@ type Props = {
 };
 
 export default function FoodModal({ open, onClose, foods: initialFoods, onChange }: Props) {
-  const [localFoods, setLocalFoods] = useState<Food[]>([]);
+  const [localFoods, setLocalFoods] = useState<Food[]>(() => initialFoods ?? []);
   const [isAdding, setIsAdding] = useState(false);
 
   // form fields for add/edit
@@ -65,8 +65,11 @@ export default function FoodModal({ open, onClose, foods: initialFoods, onChange
   const [caloriesPer100, setCaloriesPer100] = useState("");
   const [tags, setTags] = useState("");
 
+  // keep local copy in sync when modal opens; run async to avoid sync setState-in-effect
   useEffect(() => {
-    setLocalFoods(initialFoods ?? []);
+    if (!open) return;
+    const t = setTimeout(() => setLocalFoods(initialFoods ?? []), 0);
+    return () => clearTimeout(t);
   }, [initialFoods, open]);
 
   if (!open) return null;

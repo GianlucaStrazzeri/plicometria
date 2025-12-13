@@ -21,21 +21,22 @@ function makeId() {
 }
 
 export default function ProfessionalDashboard() {
-  const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [professionals, setProfessionals] = useState<Professional[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+      if (raw) return JSON.parse(raw) as Professional[];
+    } catch (e) {
+      // ignore
+    }
+    return [];
+  });
   const [search, setSearch] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState<Professional | null>(null);
   const isMountedRef = useRef(false);
   const router = useRouter();
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setProfessionals(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read professionals from storage", e);
-    }
-  }, []);
+  // professionals are initialized from localStorage via the useState lazy initializer above
 
   useEffect(() => {
     if (!isMountedRef.current) {

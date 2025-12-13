@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:postgres": "node ./scripts/seed_all.js",
+    "seed:supabase": "node ./scripts/seed.js",
+    "seed:prisma": "node ./scripts/seed_prisma.js",
+    "seed": "npm run seed:postgres && npm run seed:prisma && npm run seed:supabase"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.19",
@@ -30,6 +34,9 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-hook-form": "^7.68.0",
+    "react-markdown": "^10.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.4.0",
     "zod": "^4.1.13"
   },

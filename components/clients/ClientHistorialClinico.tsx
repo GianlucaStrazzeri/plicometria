@@ -136,97 +136,100 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
   const [observacionesAdicionales, setObservacionesAdicionales] = useState(initial.observacionesAdicionales ?? "No registrado");
 
   useEffect(() => {
-    const i = (client?.clinicalHistory ?? {}) as any;
-    // copy values safely from i to states
-    setMotivo(i.motivo ?? "");
-    setDesdeCuando(i.desdeCuando ?? "");
-    setDescripcion(i.descripcion ?? "");
-    setInicioEvolucion(i.inicioEvolucion ?? "");
-    setImpacto(i.impacto ?? "");
-    setFactoresAgravantes(i.factoresAgravantes ?? "");
-    setFactoresAtenuantes(i.factoresAtenuantes ?? "");
-    setIntensidad(i.intensidad ?? "");
-    setFrecuencia(i.frecuencia ?? "");
-    setLocalizacion(i.localizacion ?? "");
+    const t = setTimeout(() => {
+      const i = (client?.clinicalHistory ?? {}) as any;
+      // copy values safely from i to states
+      setMotivo(i.motivo ?? "");
+      setDesdeCuando(i.desdeCuando ?? "");
+      setDescripcion(i.descripcion ?? "");
+      setInicioEvolucion(i.inicioEvolucion ?? "");
+      setImpacto(i.impacto ?? "");
+      setFactoresAgravantes(i.factoresAgravantes ?? "");
+      setFactoresAtenuantes(i.factoresAtenuantes ?? "");
+      setIntensidad(i.intensidad ?? "");
+      setFrecuencia(i.frecuencia ?? "");
+      setLocalizacion(i.localizacion ?? "");
 
-    setAntecedentesPersonales(i.antecedentesPersonales ?? "");
-    setEnfermedadesCronicas(i.enfermedadesCronicas ?? "");
-    setEnfermedadesAgudas(i.enfermedadesAgudas ?? "");
-    setCirugiasPrevias(i.cirugiasPrevias ?? "");
+      setAntecedentesPersonales(i.antecedentesPersonales ?? "");
+      setEnfermedadesCronicas(i.enfermedadesCronicas ?? "");
+      setEnfermedadesAgudas(i.enfermedadesAgudas ?? "");
+      setCirugiasPrevias(i.cirugiasPrevias ?? "");
 
-    setAlergiasMedicamentosas(i.alergiasMedicamentosas ?? "");
-    setAlergiasAlimentarias(i.alergiasAlimentarias ?? "");
-    setAlergiasAmbientales(i.alergiasAmbientales ?? "");
+      setAlergiasMedicamentosas(i.alergiasMedicamentosas ?? "");
+      setAlergiasAlimentarias(i.alergiasAlimentarias ?? "");
+      setAlergiasAmbientales(i.alergiasAmbientales ?? "");
 
-    setAlimentacion(i.alimentacion ?? "");
-    setActividadFisica(i.actividadFisica ?? "");
-    setConsumoTabaco(i.consumoTabaco ?? "");
-    setConsumoAlcohol(i.consumoAlcohol ?? "");
-    setCalidadSueno(i.calidadSueno ?? "");
-    setHorasSueno(i.horasSueno ?? "");
-    setNivelesEstres(i.nivelesEstres ?? "");
+      setAlimentacion(i.alimentacion ?? "");
+      setActividadFisica(i.actividadFisica ?? "");
+      setConsumoTabaco(i.consumoTabaco ?? "");
+      setConsumoAlcohol(i.consumoAlcohol ?? "");
+      setCalidadSueno(i.calidadSueno ?? "");
+      setHorasSueno(i.horasSueno ?? "");
+      setNivelesEstres(i.nivelesEstres ?? "");
 
-    setApetito(i.apetito ?? "No registrado");
-    setDigestion(i.digestion ?? "No registrado");
-    setEvacuaciones(i.evacuaciones ?? "No registrado");
-    setFrecuenciaEvac(i.frecuenciaEvac ?? "No registrado");
-    setConsistenciaEvac(i.consistenciaEvac ?? "No registrado");
-    setCambiosRecientesEvac(i.cambiosRecientesEvac ?? "No registrado");
-    setNauseasVomitos(i.nauseasVomitos ?? "No registrado");
-    setReflujo(i.reflujo ?? "No registrado");
+      setApetito(i.apetito ?? "No registrado");
+      setDigestion(i.digestion ?? "No registrado");
+      setEvacuaciones(i.evacuaciones ?? "No registrado");
+      setFrecuenciaEvac(i.frecuenciaEvac ?? "No registrado");
+      setConsistenciaEvac(i.consistenciaEvac ?? "No registrado");
+      setCambiosRecientesEvac(i.cambiosRecientesEvac ?? "No registrado");
+      setNauseasVomitos(i.nauseasVomitos ?? "No registrado");
+      setReflujo(i.reflujo ?? "No registrado");
 
-    setFrecuenciaUrinaria(i.frecuenciaUrinaria ?? "No registrado");
-    setDolorAlOrinar(i.dolorAlOrinar ?? "No registrado");
-    setIncontinencia(i.incontinencia ?? "No registrado");
-    setCambiosColorUrinario(i.cambiosColorUrinario ?? "No registrado");
-    setCambiosOlorUrinario(i.cambiosOlorUrinario ?? "No registrado");
+      setFrecuenciaUrinaria(i.frecuenciaUrinaria ?? "No registrado");
+      setDolorAlOrinar(i.dolorAlOrinar ?? "No registrado");
+      setIncontinencia(i.incontinencia ?? "No registrado");
+      setCambiosColorUrinario(i.cambiosColorUrinario ?? "No registrado");
+      setCambiosOlorUrinario(i.cambiosOlorUrinario ?? "No registrado");
 
-    setPalpitaciones(i.palpitaciones ?? "No registrado");
-    setDisnea(i.disnea ?? "No registrado");
-    setDolorToracico(i.dolorToracico ?? "No registrado");
-    setTos(i.tos ?? "No registrado");
-    setEsputo(i.esputo ?? "No registrado");
+      setPalpitaciones(i.palpitaciones ?? "No registrado");
+      setDisnea(i.disnea ?? "No registrado");
+      setDolorToracico(i.dolorToracico ?? "No registrado");
+      setTos(i.tos ?? "No registrado");
+      setEsputo(i.esputo ?? "No registrado");
 
-    setDolorArticular(i.dolorArticular ?? "No registrado");
-    setDolorMuscular(i.dolorMuscular ?? "No registrado");
-    setLimitacionesMovimiento(i.limitacionesMovimiento ?? "No registrado");
-    setDebilidadFatiga(i.debilidadFatiga ?? "No registrado");
+      setDolorArticular(i.dolorArticular ?? "No registrado");
+      setDolorMuscular(i.dolorMuscular ?? "No registrado");
+      setLimitacionesMovimiento(i.limitacionesMovimiento ?? "No registrado");
+      setDebilidadFatiga(i.debilidadFatiga ?? "No registrado");
 
-    setSistemaCutaneo(i.sistemaCutaneo ?? "No registrado");
-    setSistemaEndocrino(i.sistemaEndocrino ?? "No registrado");
-    setSistemaHematologico(i.sistemaHematologico ?? "No registrado");
-    setMareos(i.mareos ?? "No registrado");
-    setCefaleas(i.cefaleas ?? "No registrado");
-    setPerdidaSensibilidad(i.perdidaSensibilidad ?? "No registrado");
-    setPerdidaFuerza(i.perdidaFuerza ?? "No registrado");
-    setAlterVisuales(i.alterVisuales ?? "No registrado");
-    setAlterAuditivas(i.alterAuditivas ?? "No registrado");
+      setSistemaCutaneo(i.sistemaCutaneo ?? "No registrado");
+      setSistemaEndocrino(i.sistemaEndocrino ?? "No registrado");
+      setSistemaHematologico(i.sistemaHematologico ?? "No registrado");
+      setMareos(i.mareos ?? "No registrado");
+      setCefaleas(i.cefaleas ?? "No registrado");
+      setPerdidaSensibilidad(i.perdidaSensibilidad ?? "No registrado");
+      setPerdidaFuerza(i.perdidaFuerza ?? "No registrado");
+      setAlterVisuales(i.alterVisuales ?? "No registrado");
+      setAlterAuditivas(i.alterAuditivas ?? "No registrado");
 
-    setEstadoAnimo(i.estadoAnimo ?? "No registrado");
-    setAnsiedad(i.ansiedad ?? "No registrado");
-    setDepresion(i.depresion ?? "No registrado");
-    setCambiosConducta(i.cambiosConducta ?? "No registrado");
-    setTrastornosSueno(i.trastornosSueno ?? "No registrado");
+      setEstadoAnimo(i.estadoAnimo ?? "No registrado");
+      setAnsiedad(i.ansiedad ?? "No registrado");
+      setDepresion(i.depresion ?? "No registrado");
+      setCambiosConducta(i.cambiosConducta ?? "No registrado");
+      setTrastornosSueno(i.trastornosSueno ?? "No registrado");
 
-    setTensionArterial(i.tensionArterial ?? "No registrado");
-    setFc(i.fc ?? "No registrado");
-    setFr(i.fr ?? "No registrado");
-    setTemperatura(i.temperatura ?? "No registrado");
-    setSatO2(i.satO2 ?? "No registrado");
+      setTensionArterial(i.tensionArterial ?? "No registrado");
+      setFc(i.fc ?? "No registrado");
+      setFr(i.fr ?? "No registrado");
+      setTemperatura(i.temperatura ?? "No registrado");
+      setSatO2(i.satO2 ?? "No registrado");
 
-    setPeso(i.peso ?? "No registrado");
-    setTalla(i.talla ?? "No registrado");
-    setImc(i.imc ?? "");
-    setEstadoNutricional(i.estadoNutricional ?? "No calculado");
-    setObservacionesExploracion(i.observacionesExploracion ?? "No registrado");
+      setPeso(i.peso ?? "No registrado");
+      setTalla(i.talla ?? "No registrado");
+      setImc(i.imc ?? "");
+      setEstadoNutricional(i.estadoNutricional ?? "No calculado");
+      setObservacionesExploracion(i.observacionesExploracion ?? "No registrado");
 
-    setPruebasComplementarias(i.pruebasComplementarias ?? "No registrado");
-    setDiagnostico(i.diagnostico ?? "No registrado");
-    setMedicacionPrescrita(i.medicacionPrescrita ?? "No registrado");
-    setRecomendaciones(i.recomendaciones ?? "No registrado");
-    setDerivaciones(i.derivaciones ?? "No registrado");
-    setPlanSeguimiento(i.planSeguimiento ?? "No registrado");
-    setObservacionesAdicionales(i.observacionesAdicionales ?? "No registrado");
+      setPruebasComplementarias(i.pruebasComplementarias ?? "No registrado");
+      setDiagnostico(i.diagnostico ?? "No registrado");
+      setMedicacionPrescrita(i.medicacionPrescrita ?? "No registrado");
+      setRecomendaciones(i.recomendaciones ?? "No registrado");
+      setDerivaciones(i.derivaciones ?? "No registrado");
+      setPlanSeguimiento(i.planSeguimiento ?? "No registrado");
+      setObservacionesAdicionales(i.observacionesAdicionales ?? "No registrado");
+    }, 0);
+    return () => clearTimeout(t);
   }, [client]);
 
   // Save handlers: each one passes a partial object up via onSavePart

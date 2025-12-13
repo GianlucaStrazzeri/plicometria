@@ -36,22 +36,25 @@ export default function ClientInfoModal({ open, onClose, client = null, onSave, 
 
   useEffect(() => {
     if (!open) return;
-    setAvatarUrl(client?.avatarUrl);
-    setNombre(client?.nombre ?? "");
-    setApellido(client?.apellido ?? "");
-    setNif(client?.nif ?? "");
-    setFechaNacimiento(client?.fechaNacimiento ?? "");
-    setGenero(client?.genero ?? "");
-    setDireccion(client?.direccion ?? "");
-    setCodigoPostal(client?.codigoPostal ?? "");
-    setCiudad(client?.ciudad ?? "");
-    setProvincia(client?.provincia ?? "");
-    setPais(client?.pais ?? "");
-    setEmail(client?.email ?? "");
-    setTelefono(client?.telefono ?? "");
-    setNotasMedicas(client?.notasMedicas ?? "");
-    setTipoCliente(client?.tipoCliente ?? "");
-    setPage(0);
+    const t = setTimeout(() => {
+      setAvatarUrl(client?.avatarUrl);
+      setNombre(client?.nombre ?? "");
+      setApellido(client?.apellido ?? "");
+      setNif(client?.nif ?? "");
+      setFechaNacimiento(client?.fechaNacimiento ?? "");
+      setGenero(client?.genero ?? "");
+      setDireccion(client?.direccion ?? "");
+      setCodigoPostal(client?.codigoPostal ?? "");
+      setCiudad(client?.ciudad ?? "");
+      setProvincia(client?.provincia ?? "");
+      setPais(client?.pais ?? "");
+      setEmail(client?.email ?? "");
+      setTelefono(client?.telefono ?? "");
+      setNotasMedicas(client?.notasMedicas ?? "");
+      setTipoCliente(client?.tipoCliente ?? "");
+      setPage(0);
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, client]);
 
   const [section, setSection] = useState<'datos' | 'historial'>('datos');

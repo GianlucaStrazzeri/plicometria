@@ -19,8 +19,24 @@ type Props = {
 export default function NewAppointmentModal({ open, onClose, onCreate }: Props) {
   const CLIENTS_STORAGE = "plicometria_clients_v1";
   const SERVICES_STORAGE = "plicometria_services_v1";
-  const [clients, setClients] = useState<Client[]>([]);
-  const [services, setServices] = useState<any[]>([]);
+  const [clients, setClients] = useState<Client[]>(() => {
+    try {
+      if (typeof window === "undefined") return [];
+      const raw = localStorage.getItem(CLIENTS_STORAGE);
+      return raw ? (JSON.parse(raw) as Client[]) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [services, setServices] = useState<any[]>(() => {
+    try {
+      if (typeof window === "undefined") return [];
+      const raw = localStorage.getItem(SERVICES_STORAGE);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [clientQuery, setClientQuery] = useState("");
   const [clientModalOpen, setClientModalOpen] = useState(false);
@@ -36,30 +52,32 @@ export default function NewAppointmentModal({ open, onClose, onCreate }: Props) 
   const [nota, setNota] = useState("");
 
   useEffect(() => {
-    // when modal opens, reset form and load clients/services
-    try {
-      const raw = localStorage.getItem(CLIENTS_STORAGE);
-      if (raw) setClients(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to load clients", e);
-    }
-    try {
-      const rawS = localStorage.getItem(SERVICES_STORAGE);
-      if (rawS) setServices(JSON.parse(rawS));
-    } catch (e) {
-      console.warn("Failed to load services", e);
-    }
-
+    // reset form when opened (defer state updates to avoid sync setState in effect)
     if (!open) return;
-    // reset form when opened
-    setFecha("");
-    setHoraInicio("");
-    setHoraFin("");
-    setPaciente("");
-    setProfesional("");
-    setTipo("");
-    setEstado("pendiente");
-    setNota("");
+    const t = setTimeout(() => {
+      setFecha("");
+      setHoraInicio("");
+      setHoraFin("");
+      setPaciente("");
+      setProfesional("");
+      setTipo("");
+      setEstado("pendiente");
+      setNota("");
+      // attempt to reload persisted lists in case they changed elsewhere
+      try {
+        const raw = localStorage.getItem(CLIENTS_STORAGE);
+        if (raw) setClients(JSON.parse(raw));
+      } catch (e) {
+        console.warn("Failed to load clients", e);
+      }
+      try {
+        const rawS = localStorage.getItem(SERVICES_STORAGE);
+        if (rawS) setServices(JSON.parse(rawS));
+      } catch (e) {
+        console.warn("Failed to load services", e);
+      }
+    }, 0);
+    return () => clearTimeout(t);
   }, [open]);
 
   const handleCreate = () => {

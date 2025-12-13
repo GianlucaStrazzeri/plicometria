@@ -28,30 +28,35 @@ const SERVICES_KEY = "plicometria_services_v1";
 const MAPPING_KEY = "plicometria_professional_services_v1";
 
 export default function ServicesSelectModal({ open, onClose, professionalId, onChange }: Props) {
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(SERVICES_KEY) : null;
+      return raw ? (JSON.parse(raw) as Service[]) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (!open) return;
-    try {
-      const raw = localStorage.getItem(SERVICES_KEY);
-      const rawMap = localStorage.getItem(MAPPING_KEY);
-      const svc = raw ? (JSON.parse(raw) as Service[]) : [];
-      setServices(svc);
-
-      const map = rawMap ? (JSON.parse(rawMap) as Mapping[]) : [];
-      const existing = professionalId ? map.find((m) => String(m.professionalId) === String(professionalId)) : undefined;
-      const ids = existing ? existing.serviceIds || [] : [];
-      const sel: Record<string, boolean> = {};
-      for (const s of svc) sel[s.id] = ids.includes(s.id);
-      setSelected(sel);
-    } catch (e) {
-      console.warn("Failed to load services mapping", e);
-      setServices([]);
-      setSelected({});
-    }
-  }, [open, professionalId]);
+    const t = setTimeout(() => {
+      try {
+        const rawMap = localStorage.getItem(MAPPING_KEY);
+        const map = rawMap ? (JSON.parse(rawMap) as Mapping[]) : [];
+        const existing = professionalId ? map.find((m) => String(m.professionalId) === String(professionalId)) : undefined;
+        const ids = existing ? existing.serviceIds || [] : [];
+        const sel: Record<string, boolean> = {};
+        for (const s of services) sel[s.id] = ids.includes(s.id);
+        setSelected(sel);
+      } catch (e) {
+        console.warn("Failed to load services mapping", e);
+        setSelected({});
+      }
+    }, 0);
+    return () => clearTimeout(t);
+  }, [open, professionalId, services]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

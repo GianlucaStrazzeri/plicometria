@@ -22,20 +22,23 @@ export default function ClientBillsModal({ open, onClose, client = null }: Props
 
   useEffect(() => {
     if (!open) return;
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-      // filter by client id or name when client provided
-      const filtered = parsed.filter((b: any) => {
-        if (!client) return true;
-        if (client.id && b.clientId) return b.clientId === client.id;
-        return (b.clientName || "").toLowerCase().includes(((client.nombre ?? "") + " " + (client.apellido ?? "")).trim().toLowerCase());
-      });
-      setBills(filtered);
-    } catch (e) {
-      console.warn("Failed to load bills", e);
-      setBills([]);
-    }
+    const t = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        // filter by client id or name when client provided
+        const filtered = parsed.filter((b: any) => {
+          if (!client) return true;
+          if (client.id && b.clientId) return b.clientId === client.id;
+          return (b.clientName || "").toLowerCase().includes(((client.nombre ?? "") + " " + (client.apellido ?? "")).trim().toLowerCase());
+        });
+        setBills(filtered);
+      } catch (e) {
+        console.warn("Failed to load bills", e);
+        setBills([]);
+      }
+    }, 0);
+    return () => clearTimeout(t);
   }, [open, client]);
 
   function saveBill(payload: any) {
