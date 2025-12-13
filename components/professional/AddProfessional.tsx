@@ -123,7 +123,7 @@ export default function AddProfessional({ open, onClose, initial = null, onSave,
 
           <div>
             <Label htmlFor="prof-notas">Notas</Label>
-            <input id="prof-notas" className="w-full rounded border px-2 py-1" value={notas} onChange={(e) => setNotas(e.target.value)} />
+            <Input id="prof-notas" className="w-full" value={notas} onChange={(e) => setNotas(e.target.value)} />
           </div>
         </div>
 

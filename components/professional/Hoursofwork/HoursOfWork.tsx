@@ -89,7 +89,7 @@ export default function HoursOfWork({ open, onClose, professionalId }: Props) {
 
 				<div className="grid grid-cols-1 gap-3 mb-4">
 					<div className="flex gap-2">
-						<select value={day} onChange={(e) => setDay(e.target.value)} className="rounded border px-2 py-1">
+						<select aria-label="Día" title="Día" value={day} onChange={(e) => setDay(e.target.value)} className="rounded border px-2 py-1">
 							<option value="monday">Lunes</option>
 							<option value="tuesday">Martes</option>
 							<option value="wednesday">Miércoles</option>

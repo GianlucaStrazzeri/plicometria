@@ -144,7 +144,7 @@ export default function ProfessionalDashboard() {
           <Button className="w-full sm:w-auto" onClick={() => router.push('/')}>Vista</Button>
           <Button className="w-full sm:w-auto" onClick={() => { setEditing(null); setOpenModal(true); }}>Nuevo profesional</Button>
           <Button className="w-full sm:w-auto" variant="outline" onClick={() => document.getElementById("prof-import")?.click()}>Importar</Button>
-          <input id="prof-import" type="file" accept="application/json" className="hidden" onChange={handleImportFile} />
+          <input id="prof-import" type="file" accept="application/json" className="hidden" onChange={handleImportFile} aria-label="Importar profesionales" title="Importar profesionales" />
           <Button className="w-full sm:w-auto" variant="outline" onClick={handleExport}>Exportar</Button>
         </div>
       </div>
