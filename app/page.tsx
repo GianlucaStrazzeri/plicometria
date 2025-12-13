@@ -12,7 +12,7 @@ export default function LandingPage() {
     <>
       <div className="fixed right-6 top-6 z-50">
         <Link
-          href="/homepage"
+          href="/clients"
           className="rounded-full bg-slate-900 text-white px-4 py-2 text-sm font-semibold shadow hover:bg-slate-800"
         >
           Try it
