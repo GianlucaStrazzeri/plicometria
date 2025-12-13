@@ -19,6 +19,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ChatWidget from "@/components/chat/ChatWidget";
+import LeadForm from "@/components/marketing/lead/LeadForm";
 // Button removed: navigation happens immediately on select change
 
 export default function Homepage() {
@@ -26,6 +27,8 @@ export default function Homepage() {
 	const [choice, setChoice] = useState("");
 	const [counts, setCounts] = useState({ clients: 0, services: 0, bills: 0, appointments: 0 });
 	const [chatOpen, setChatOpen] = useState(false);
+	const [leadOpen, setLeadOpen] = useState(false);
+	const [leadSource, setLeadSource] = useState<string | null>(null);
 
 	useEffect(() => {
 		function load() {
@@ -111,6 +114,12 @@ export default function Homepage() {
 						</div>
 				</div>
 
+				{/* Marketing quick actions: abrir formulario y registrar cuál botón */}
+				<div className="mt-4 flex gap-3 mb-4">
+					<button onClick={() => { setLeadSource('interesado_servicios'); setLeadOpen(true); }} className="px-3 py-2 rounded border bg-emerald-50">Quiero información</button>
+					<button onClick={() => { setLeadSource('tengo_clinica'); setLeadOpen(true); }} className="px-3 py-2 rounded border bg-amber-50">Tengo una clínica</button>
+				</div>
+
 				{/* Select visible on all sizes (mobile + desktop) */}
 				<div className="block">
 					<label className="block text-sm font-medium text-muted-foreground">Ir a</label>
@@ -145,6 +154,11 @@ export default function Homepage() {
 							<ChatWidget />
 						</div>
 					</div>
+				) : null}
+
+				{/* Lead form modal */}
+				{leadOpen ? (
+					<LeadForm source={leadSource} onClose={() => { setLeadOpen(false); setLeadSource(null); }} />
 				) : null}
 			</div>
 		</div>

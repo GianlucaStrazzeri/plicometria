@@ -6,7 +6,12 @@
  * Nota: componente estático (Server Component friendly). No usa hooks ni window/localStorage.
  */
 
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import LeadForm from "./leadsform/LeadForm";
+
 import {
   BarChart3,
   CalendarDays,
@@ -172,6 +177,9 @@ function LaptopMock() {
 }
 
 export default function LandingClinic() {
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [leadSource, setLeadSource] = useState("");
+
   return (
     <main className="min-h-screen bg-white">
       {/* Fondo suave */}
@@ -250,6 +258,10 @@ export default function LandingClinic() {
               <Button
                 variant="outline"
                 className="rounded-xl border-slate-200 bg-white px-6 py-6 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+                onClick={() => {
+                  setLeadSource("Solicitar demo");
+                  setLeadOpen(true);
+                }}
               >
                 Solicitar demo
               </Button>
@@ -330,13 +342,23 @@ export default function LandingClinic() {
             Activa tu cuenta o agenda una demo guiada. Incluimos migración y
             onboarding para que el cambio sea inmediato.
           </p>
-          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button className="rounded-xl bg-slate-900 px-8 py-6 text-sm font-semibold text-white hover:bg-slate-800">
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button
+              className="rounded-xl bg-slate-900 px-8 py-6 text-sm font-semibold text-white hover:bg-slate-800"
+              onClick={() => {
+                setLeadSource("Prueba gratis");
+                setLeadOpen(true);
+              }}
+            >
               Prueba gratis
             </Button>
             <Button
               variant="outline"
               className="rounded-xl border-slate-200 bg-white px-8 py-6 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              onClick={() => {
+                setLeadSource("Hablar con ventas");
+                setLeadOpen(true);
+              }}
             >
               Hablar con ventas
             </Button>
@@ -353,6 +375,7 @@ export default function LandingClinic() {
           </div>
         </div>
       </footer>
+      <LeadForm open={leadOpen} source={leadSource} onClose={() => setLeadOpen(false)} />
     </main>
   );
 }
