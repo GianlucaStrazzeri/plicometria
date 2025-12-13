@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseServer';
 import { getAdminCheck } from '@/lib/auth';
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, context: any) {
   try {
-    const id = params.id;
+    const params = context?.params;
+    const id = params?.id;
     const { data, error } = await supabaseAdmin.from('professionals').select('*').eq('id', id).single();
     if (error) return NextResponse.json({ error: error.message }, { status: 404 });
     return NextResponse.json(data);
@@ -13,11 +14,12 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, context: any) {
   try {
     const ok = getAdminCheck(req);
     if (!ok) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const id = params.id;
+    const params = context?.params;
+    const id = params?.id;
     const body = await req.json();
     const updates = {
       name: body.name,
@@ -36,11 +38,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, context: any) {
   try {
     const ok = getAdminCheck(req);
     if (!ok) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const id = params.id;
+    const params = context?.params;
+    const id = params?.id;
     const { error } = await supabaseAdmin.from('professionals').delete().eq('id', id);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });

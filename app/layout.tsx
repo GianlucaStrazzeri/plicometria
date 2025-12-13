@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RegisterPWA from "../components/pwa/RegisterPWA";
+import Homepage from "@/components/homepage/homepage";
 import { ConsentPopup } from "@/components/marketing";
 import ToastProvider from "@/components/ui/toast";
 
@@ -30,6 +31,8 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0f172a" />
+        {/* Provide a standard apple-touch-icon entry to satisfy webhint / Edge Tools checks */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
         <link
           rel="stylesheet"
@@ -51,6 +54,7 @@ export default function RootLayout({
           {children}
           <RegisterPWA />
           <ConsentPopup />
+          <Homepage />
         </ToastProvider>
       </body>
     </html>

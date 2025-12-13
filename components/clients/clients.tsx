@@ -36,7 +36,7 @@ export default function ClientsTable() {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
       if (raw) return JSON.parse(raw) as Client[];
-    } catch (e) {
+    } catch (_e) {
       // ignore
     }
     return [];

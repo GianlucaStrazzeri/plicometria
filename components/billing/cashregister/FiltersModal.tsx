@@ -15,7 +15,7 @@ type Props = {
   onExportExpenses?: () => void;
 };
 
-export default function FiltersModal({ open, onClose, startDate, endDate, onApply, onClear }: Props) {
+export default function FiltersModal({ open, onClose, startDate, endDate, onApply, onClear, onExportPayments, onExportExpenses }: Props) {
   const [start, setStart] = useState<string | null>(startDate ?? null);
   const [end, setEnd] = useState<string | null>(endDate ?? null);
 

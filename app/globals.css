@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Styles used by the homepage quick-navigation suggestions list */
+.homepage-suggestions {
+  max-height: 160px;
+  overflow-y: auto;
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}

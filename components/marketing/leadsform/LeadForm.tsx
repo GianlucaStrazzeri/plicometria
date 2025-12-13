@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 type Props = {
   open: boolean;
@@ -8,7 +8,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default function LeadForm({ open, source = "", onClose }: Props) {
+export default function LeadForm({ open, source = "", onClose }: Props): React.ReactElement | null {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -24,7 +24,7 @@ export default function LeadForm({ open, source = "", onClose }: Props) {
 
   if (!open) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("sending");
 
@@ -74,8 +74,9 @@ export default function LeadForm({ open, source = "", onClose }: Props) {
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Nombre</label>
+            <label htmlFor="lead-name" className="mb-1 block text-xs font-medium text-slate-600">Nombre</label>
             <input
+              id="lead-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -84,8 +85,9 @@ export default function LeadForm({ open, source = "", onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Email</label>
+            <label htmlFor="lead-email" className="mb-1 block text-xs font-medium text-slate-600">Email</label>
             <input
+              id="lead-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -96,16 +98,18 @@ export default function LeadForm({ open, source = "", onClose }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-medium text-slate-600">Teléfono</label>
+              <label htmlFor="lead-phone" className="mb-1 block text-xs font-medium text-slate-600">Teléfono</label>
               <input
+                id="lead-phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-slate-600">Empresa (opcional)</label>
+              <label htmlFor="lead-company" className="mb-1 block text-xs font-medium text-slate-600">Empresa (opcional)</label>
               <input
+                id="lead-company"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
@@ -114,8 +118,9 @@ export default function LeadForm({ open, source = "", onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Mensaje (opcional)</label>
+            <label htmlFor="lead-message" className="mb-1 block text-xs font-medium text-slate-600">Mensaje (opcional)</label>
             <textarea
+              id="lead-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={3}

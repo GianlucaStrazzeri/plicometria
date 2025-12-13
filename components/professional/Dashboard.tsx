@@ -25,7 +25,7 @@ export default function ProfessionalDashboard() {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
       if (raw) return JSON.parse(raw) as Professional[];
-    } catch (e) {
+    } catch (_e) {
       // ignore
     }
     return [];

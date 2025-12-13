@@ -23,12 +23,12 @@ export async function getPrisma(): Promise<PrismaClient> {
     // Attempt to load the better-sqlite3 adapter and construct the client
     // with it. This may fail in some build environments; we catch and
     // fall back to a plain PrismaClient if necessary.
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const { PrismaBetterSqlite3 } = await import('@prisma/adapter-better-sqlite3');
     const databaseUrl = process.env.DATABASE_URL ?? 'file:./dev.db';
     const adapter = new (PrismaBetterSqlite3 as any)({ url: databaseUrl }, {});
     client = new (ImportedPrismaClient as any)({ adapter });
-  } catch (e) {
+  } catch (_e) {
     // Fallback: try plain PrismaClient (may still require suitable engine).
     client = new ImportedPrismaClient();
   }

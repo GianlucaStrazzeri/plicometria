@@ -25,7 +25,7 @@ export default function ServicesDashboard() {
     try {
       const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
       if (raw) return JSON.parse(raw) as Service[];
-    } catch (e) {
+    } catch (_e) {
       // ignore
     }
     // seed default if not present
@@ -58,8 +58,8 @@ export default function ServicesDashboard() {
     }
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(services));
-    } catch (e) {
-      console.warn("Failed to save services to storage", e);
+    } catch (_e) {
+      console.warn("Failed to save services to storage", _e);
     }
   }, [services]);
 
@@ -139,9 +139,9 @@ export default function ServicesDashboard() {
           return Array.from(map.values());
         });
         alert(`Importados ${valid.length} servicios (se han unido por id).`);
-      } catch (err) {
-        console.error(err);
-        alert("Error leyendo archivo: " + err);
+      } catch (_err) {
+        console.error(_err);
+        alert("Error leyendo archivo: " + _err);
       }
     };
     reader.readAsText(f);

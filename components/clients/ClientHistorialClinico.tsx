@@ -330,11 +330,11 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Descripción detallada del problema</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+            <textarea aria-label="Descripción detallada del problema" className="w-full rounded border px-2 py-1" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Inicio y evolución</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={inicioEvolucion} onChange={(e) => setInicioEvolucion(e.target.value)} />
+            <textarea aria-label="Inicio y evolución" className="w-full rounded border px-2 py-1" value={inicioEvolucion} onChange={(e) => setInicioEvolucion(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={saveHistoria}>Guardar Historia</Button>
@@ -346,16 +346,16 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Impacto en la vida diaria</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={impacto} onChange={(e) => setImpacto(e.target.value)} />
+            <textarea aria-label="Impacto en la vida diaria" className="w-full rounded border px-2 py-1" value={impacto} onChange={(e) => setImpacto(e.target.value)} />
           </div>
 
           <div>
             <Label className="block mb-1">Factores agravantes</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={factoresAgravantes} onChange={(e) => setFactoresAgravantes(e.target.value)} />
+            <textarea aria-label="Factores agravantes" className="w-full rounded border px-2 py-1" value={factoresAgravantes} onChange={(e) => setFactoresAgravantes(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Factores atenuantes</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={factoresAtenuantes} onChange={(e) => setFactoresAtenuantes(e.target.value)} />
+            <textarea aria-label="Factores atenuantes" className="w-full rounded border px-2 py-1" value={factoresAtenuantes} onChange={(e) => setFactoresAtenuantes(e.target.value)} />
           </div>
 
           <div className="grid md:grid-cols-3 gap-3">
@@ -383,19 +383,19 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Antecedentes Personales</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={antecedentesPersonales} onChange={(e) => setAntecedentesPersonales(e.target.value)} />
+            <textarea aria-label="Antecedentes personales" className="w-full rounded border px-2 py-1" value={antecedentesPersonales} onChange={(e) => setAntecedentesPersonales(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Enfermedades crónicas</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={enfermedadesCronicas} onChange={(e) => setEnfermedadesCronicas(e.target.value)} />
+            <textarea aria-label="Enfermedades crónicas" className="w-full rounded border px-2 py-1" value={enfermedadesCronicas} onChange={(e) => setEnfermedadesCronicas(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Enfermedades agudas importantes</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={enfermedadesAgudas} onChange={(e) => setEnfermedadesAgudas(e.target.value)} />
+            <textarea aria-label="Enfermedades agudas importantes" className="w-full rounded border px-2 py-1" value={enfermedadesAgudas} onChange={(e) => setEnfermedadesAgudas(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Cirugías previas</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={cirugiasPrevias} onChange={(e) => setCirugiasPrevias(e.target.value)} />
+            <textarea aria-label="Cirugías previas" className="w-full rounded border px-2 py-1" value={cirugiasPrevias} onChange={(e) => setCirugiasPrevias(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={saveAntecedentes}>Guardar Antecedentes</Button>
@@ -407,15 +407,15 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Alergias - Medicamentosas</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={alergiasMedicamentosas} onChange={(e) => setAlergiasMedicamentosas(e.target.value)} />
+            <textarea aria-label="Alergias medicamentosas" className="w-full rounded border px-2 py-1" value={alergiasMedicamentosas} onChange={(e) => setAlergiasMedicamentosas(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Alergias - Alimentarias</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={alergiasAlimentarias} onChange={(e) => setAlergiasAlimentarias(e.target.value)} />
+            <textarea aria-label="Alergias alimentarias" className="w-full rounded border px-2 py-1" value={alergiasAlimentarias} onChange={(e) => setAlergiasAlimentarias(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Alergias - Ambientales</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={alergiasAmbientales} onChange={(e) => setAlergiasAmbientales(e.target.value)} />
+            <textarea aria-label="Alergias ambientales" className="w-full rounded border px-2 py-1" value={alergiasAmbientales} onChange={(e) => setAlergiasAmbientales(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={saveAlergias}>Guardar Alergias</Button>
@@ -427,7 +427,7 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Alimentación</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={alimentacion} onChange={(e) => setAlimentacion(e.target.value)} />
+            <textarea aria-label="Alimentación" className="w-full rounded border px-2 py-1" value={alimentacion} onChange={(e) => setAlimentacion(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Actividad física</Label>
@@ -665,7 +665,7 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
           </div>
           <div>
             <Label className="block mb-1">Observaciones de la exploración física</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={observacionesExploracion} onChange={(e) => setObservacionesExploracion(e.target.value)} />
+            <textarea aria-label="Observaciones de la exploración física" className="w-full rounded border px-2 py-1" value={observacionesExploracion} onChange={(e) => setObservacionesExploracion(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={saveExploracion}>Guardar Exploración</Button>
@@ -677,7 +677,7 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Pruebas complementarias</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={pruebasComplementarias} onChange={(e) => setPruebasComplementarias(e.target.value)} />
+            <textarea aria-label="Pruebas complementarias" className="w-full rounded border px-2 py-1" value={pruebasComplementarias} onChange={(e) => setPruebasComplementarias(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={savePruebas}>Guardar Pruebas</Button>
@@ -689,27 +689,27 @@ export default function ClientHistorialClinico({ client = null, onSavePart }: Pr
         <div className="space-y-2">
           <div>
             <Label className="block mb-1">Diagnóstico</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={diagnostico} onChange={(e) => setDiagnostico(e.target.value)} />
+            <textarea aria-label="Diagnóstico" className="w-full rounded border px-2 py-1" value={diagnostico} onChange={(e) => setDiagnostico(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Medicación prescrita</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={medicacionPrescrita} onChange={(e) => setMedicacionPrescrita(e.target.value)} />
+            <textarea aria-label="Medicación prescrita" className="w-full rounded border px-2 py-1" value={medicacionPrescrita} onChange={(e) => setMedicacionPrescrita(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Recomendaciones</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={recomendaciones} onChange={(e) => setRecomendaciones(e.target.value)} />
+            <textarea aria-label="Recomendaciones" className="w-full rounded border px-2 py-1" value={recomendaciones} onChange={(e) => setRecomendaciones(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Derivaciones</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={derivaciones} onChange={(e) => setDerivaciones(e.target.value)} />
+            <textarea aria-label="Derivaciones" className="w-full rounded border px-2 py-1" value={derivaciones} onChange={(e) => setDerivaciones(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Plan de seguimiento</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={planSeguimiento} onChange={(e) => setPlanSeguimiento(e.target.value)} />
+            <textarea aria-label="Plan de seguimiento" className="w-full rounded border px-2 py-1" value={planSeguimiento} onChange={(e) => setPlanSeguimiento(e.target.value)} />
           </div>
           <div>
             <Label className="block mb-1">Observaciones adicionales</Label>
-            <textarea className="w-full rounded border px-2 py-1" value={observacionesAdicionales} onChange={(e) => setObservacionesAdicionales(e.target.value)} />
+            <textarea aria-label="Observaciones adicionales" className="w-full rounded border px-2 py-1" value={observacionesAdicionales} onChange={(e) => setObservacionesAdicionales(e.target.value)} />
           </div>
           <div className="flex justify-end">
             <Button onClick={saveDiagnostico}>Guardar Diagnóstico / Plan</Button>

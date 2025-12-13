@@ -11,7 +11,6 @@ type Props = {
 export default function ConsentPopup(props: Props): React.ReactElement | null {
   const { message, onChange, localStorageKey = "marketing_consent" } = props;
   const [visible, setVisible] = useState(false);
-  const [consent, setConsent] = useState<boolean | null>(null);
 
   // Evitar render en servidor para prevenir warnings de hidratación
   const [mounted, setMounted] = useState(false);
@@ -28,7 +27,8 @@ export default function ConsentPopup(props: Props): React.ReactElement | null {
       if (saved === null) {
         setVisible(true);
       } else {
-        setConsent(saved === "true");
+        // previously stored consent exists; we don't keep it in component state
+        // (no-op here)
       }
     } catch (err) {
       // localStorage may throw in some environments; just hide popup
@@ -56,7 +56,6 @@ export default function ConsentPopup(props: Props): React.ReactElement | null {
     try {
       if (typeof window !== "undefined") localStorage.setItem(localStorageKey, "true");
     } catch (e) {}
-    setConsent(true);
     setVisible(false);
     onChange?.(true);
   };
@@ -65,7 +64,6 @@ export default function ConsentPopup(props: Props): React.ReactElement | null {
     try {
       if (typeof window !== "undefined") localStorage.setItem(localStorageKey, "false");
     } catch (e) {}
-    setConsent(false);
     setVisible(false);
     onChange?.(false);
   };

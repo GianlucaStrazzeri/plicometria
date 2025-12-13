@@ -105,15 +105,15 @@ export default function ListOfFoods() {
           }
         }
       } catch (err) {
-        // ignore and try localStorage
+          // ignore and try localStorage
       }
 
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) setFoods(JSON.parse(raw));
-      } catch (e) {
-        console.warn("Failed to read foods from storage", e);
-      }
+        } catch (_e) {
+          console.warn("Failed to read foods from storage", _e);
+        }
     })();
 
     return () => { mounted = false };
@@ -249,7 +249,7 @@ export default function ListOfFoods() {
         return;
       }
     } catch (err) {
-      console.warn("Supabase write failed, falling back to local storage", err);
+        console.warn("Supabase write failed, falling back to local storage", _err);
     }
 
     // Fallback: persist locally
@@ -274,9 +274,9 @@ export default function ListOfFoods() {
           try { localStorage.setItem(STORAGE_KEY, JSON.stringify(foods)); } catch {}
           return;
         }
-      } catch (err) {
-        console.warn("Supabase delete failed, falling back to local", err);
-      }
+        } catch (_err) {
+          console.warn("Supabase delete failed, falling back to local", _err);
+        }
       setFoods((prev) => prev.filter((p) => p.id !== id));
     })();
   };

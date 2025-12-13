@@ -59,7 +59,8 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Facebook",
     description: "Conectar con Facebook / Pages (API Graph)",
     oauth: true,
-    authUrl: ({ redirectUri }) => {
+    authUrl: (opts: { redirectUri?: string; scope?: string } = {}) => {
+      const { redirectUri } = opts;
       // Nota: reemplazar CLIENT_ID y scopes reales cuando se implemente
       const clientId = process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID ?? "YOUR_FACEBOOK_CLIENT_ID";
       const scope = encodeURIComponent("pages_show_list,pages_manage_posts");
@@ -74,7 +75,7 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "WhatsApp (Business API)",
     description: "WhatsApp Business — requiere Business account y token",
     oauth: false,
-    authUrl: null,
+    authUrl: undefined,
     docsUrl: "https://developers.facebook.com/docs/whatsapp",
   },
 
@@ -83,7 +84,8 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Instagram",
     description: "Instagram Basic / Graph API",
     oauth: true,
-    authUrl: ({ redirectUri }) => {
+    authUrl: (opts: { redirectUri?: string; scope?: string } = {}) => {
+      const { redirectUri } = opts;
       const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_CLIENT_ID ?? "YOUR_INSTAGRAM_CLIENT_ID";
       const redirect = encodeURIComponent(redirectUri ?? "http://localhost:3000/api/auth/instagram/callback");
       const scope = encodeURIComponent("user_profile,user_media");
@@ -97,7 +99,7 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Google Maps",
     description: "API de Google Maps (clave API)",
     oauth: false,
-    authUrl: null,
+    authUrl: undefined,
     docsUrl: "https://developers.google.com/maps",
   },
 
@@ -106,7 +108,8 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Google Calendar",
     description: "Google Calendar (OAuth2)",
     oauth: true,
-    authUrl: ({ redirectUri, scope }) => {
+    authUrl: (opts: { redirectUri?: string; scope?: string } = {}) => {
+      const { redirectUri, scope } = opts;
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "YOUR_GOOGLE_CLIENT_ID";
       const redirect = encodeURIComponent(redirectUri ?? "http://localhost:3000/api/auth/google/callback");
       const s = encodeURIComponent(scope ?? "https://www.googleapis.com/auth/calendar.events");
@@ -120,7 +123,8 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Gmail / Google Mail",
     description: "Gmail API (leer/enviar correos) — OAuth2",
     oauth: true,
-    authUrl: ({ redirectUri }) => {
+    authUrl: (opts: { redirectUri?: string; scope?: string } = {}) => {
+      const { redirectUri } = opts;
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "YOUR_GOOGLE_CLIENT_ID";
       const redirect = encodeURIComponent(redirectUri ?? "http://localhost:3000/api/auth/google/callback");
       const scope = encodeURIComponent("https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send");
@@ -134,7 +138,7 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Publer",
     description: "Herramienta de programación de publicaciones (API)",
     oauth: false,
-    authUrl: null,
+    authUrl: undefined,
     docsUrl: "https://publer.io/",
   },
 
@@ -143,7 +147,7 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "n8n",
     description: "n8n — plataforma de automatización (webhook / API)",
     oauth: false,
-    authUrl: null,
+    authUrl: undefined,
     docsUrl: "https://docs.n8n.io/",
   },
 
@@ -152,7 +156,8 @@ export const CONNECTORS: ConnectorDefinition[] = [
     name: "Make (Integromat)",
     description: "Make (antes Integromat) — webhooks / OAuth",
     oauth: true,
-    authUrl: ({ redirectUri }) => {
+    authUrl: (opts: { redirectUri?: string; scope?: string } = {}) => {
+      const { redirectUri } = opts;
       // Placeholder — Make supports OAuth for some apps; actual flow depends on use
       return null;
     },
