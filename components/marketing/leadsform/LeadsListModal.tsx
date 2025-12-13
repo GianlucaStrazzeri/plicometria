@@ -18,22 +18,29 @@ export default function LeadsListModal({ open, onClose }: { open: boolean; onClo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-
+  const loadLeads = async () => {
     setLoading(true);
     setError(null);
-    fetch("/api/marketing/leads")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data && data.ok) setLeads(data.leads || []);
-        else setError("No se pudieron cargar los leads");
-      })
-      .catch((e) => {
-        console.error(e);
-        setError("Error al cargar leads");
-      })
-      .finally(() => setLoading(false));
+    try {
+      const res = await fetch("/api/marketing/leads", { cache: "no-store" });
+      const data = await res.json();
+      if (res.ok && data && data.ok) {
+        setLeads(data.leads || []);
+      } else {
+        console.error("Leads fetch failed", { status: res.status, body: data });
+        setError("No se pudieron cargar los leads");
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Error al cargar leads");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    loadLeads();
   }, [open]);
 
   if (!open) return null;
@@ -45,7 +52,10 @@ export default function LeadsListModal({ open, onClose }: { open: boolean; onClo
       <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold">Leads registrados</h3>
-          <button className="rounded-md bg-slate-100 px-3 py-1 text-sm" onClick={onClose}>Cerrar</button>
+          <div className="flex gap-2">
+            <button className="rounded-md bg-slate-100 px-3 py-1 text-sm" onClick={loadLeads}>Refrescar</button>
+            <button className="rounded-md bg-slate-100 px-3 py-1 text-sm" onClick={onClose}>Cerrar</button>
+          </div>
         </div>
 
         {loading ? (

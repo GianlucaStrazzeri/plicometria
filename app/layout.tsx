@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import RegisterPWA from "../components/pwa/RegisterPWA";
+import { ConsentPopup } from "@/components/marketing";
 import ToastProvider from "@/components/ui/toast";
 
 const geistSans = Geist({
@@ -49,6 +50,7 @@ export default function RootLayout({
         <ToastProvider>
           {children}
           <RegisterPWA />
+          <ConsentPopup />
         </ToastProvider>
       </body>
     </html>
